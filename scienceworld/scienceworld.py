@@ -362,6 +362,11 @@ class ScienceWorldEnv:
         goalStr = self.gateway.getGoalProgressStr()
         return goalStr
 
+    def getGoalProgressJSON(self):
+        jsonStr = self.gateway.getGoalProgressJSON()
+        data = json.loads(jsonStr)
+        return data
+
 
 class BufferedHistorySaver:
 
