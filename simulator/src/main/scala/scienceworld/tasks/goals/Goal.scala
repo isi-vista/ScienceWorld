@@ -2,8 +2,10 @@ package scienceworld.tasks.goals
 
 import scienceworld.objects.agent.Agent
 import scienceworld.struct.EnvObject
+import scienceworld.struct.EnvObject.MODE_CURSORY_DETAIL
 
 import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
 import scala.util.control.Breaks._
 
 // Storage class for a single goal
@@ -331,9 +333,84 @@ class GoalSequence(val subgoals:Array[Goal], optionalUnorderedSubgoals:Array[Goa
     os.toString()
   }
 
+  def toJSONArray(goals: Array[Goal], requiredGoals: Boolean): String = {
+    val jsonGoals = new ArrayBuffer[String]
+    for (i <- 0 until goals.length) {
+      val goal = goals(i)
+      val goalDescription = goal.description
+      val goalClass = goal.getClass.toString.split("\\.").last
+      val key = goal.key
+      val keysMustBeCompletedBefore = goal.keysMustBeCompletedBefore
+      val keysMustBeCompletedBeforeJSON = "[" +
+        keysMustBeCompletedBefore.map(s => "\"" + GoalSequence.sanitizeJSON(s) + "\"").mkString(", ") + "]"
+      val satisfiedWithObject = goal.satisfiedWithObject
+      val satisfiedWithObjectJSON =
+        if (satisfiedWithObject.isDefined) {
+            GoalSequence.sanitizeJSON(satisfiedWithObject.get.getDescription(MODE_CURSORY_DETAIL))
+        } else {
+          ""
+        }
+      val defocusOnSuccess = goal.defocusOnSuccess
+      val isOptional = goal.isOptional
+      val passed =
+        if (requiredGoals) {
+          i < this.curSubgoalIdx
+        } else {
+          this.optionalUnorderedSubgoalsCompleted(i)
+        }
+
+      val json = new StringBuilder
+      json.append("{")
+      json.append("\"description\":\"" + GoalSequence.sanitizeJSON(goalDescription) + "\", ")
+      json.append("\"class\":\"" + GoalSequence.sanitizeJSON(goalClass) + "\", ")
+      json.append("\"key\":\"" + GoalSequence.sanitizeJSON(key) + "\", ")
+      json.append("\"keysMustBeCompletedBefore\":" + keysMustBeCompletedBeforeJSON + ", ")
+      json.append("\"satisfiedWithObject\":\"" + satisfiedWithObjectJSON + "\", ")
+      json.append("\"defocusOnSuccess\":" + defocusOnSuccess + ", ")
+      json.append("\"isOptional\":" + isOptional + ", ")
+      json.append("\"passed\":" + passed + "")
+      json.append("}")
+
+      jsonGoals.append(json.toString())
+    }
+
+    val jsonOut = "[" + jsonGoals.mkString(", ") + "]"
+
+    return jsonOut
+  }
+
+  def toJSON(): String = {
+    val completedKeysJSON =
+      "[" +
+        this.completedKeys.toList.sorted.map(GoalSequence.sanitizeJSON).map(s => "\"" + s + "\"").mkString(", ") + "]"
+
+    val json = new StringBuilder
+    json.append("{")
+    json.append("\"isFailed\":" + this.isFailed() + ", ")
+    json.append("\"completedKeys\":" + completedKeysJSON + ", ")
+    json.append("\"sequentialSubgoals\":" + toJSONArray(subgoals, requiredGoals = true) + ", ")
+    json.append("\"unorderedSubgoals\":" + toJSONArray(optionalUnorderedSubgoals, requiredGoals = false))
+    json.append("}")
+
+    return json.toString
+  }
+
 
 }
 
+object GoalSequence {
+
+  def sanitizeJSON(in:String):String = {
+    var out = in.replace("\\", "\\\\")
+    out = out.replace("\"", "\\\"")
+    out = out.replace("\n", "\\n")
+    out = out.replace("\r", "\\r")
+    out = out.replace("\t", "\\t")
+
+    return out
+  }
+
+}
 
 // Storage class for return values
 class GoalReturn(val subgoalSuccess:Boolean, val taskFailure:Boolean) {
