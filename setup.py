@@ -1,4 +1,5 @@
 import os.path, sys
+import subprocess
 
 from setuptools import setup
 
@@ -13,6 +14,16 @@ OBJECTS_LUT_FILE = "object_type_ids.tsv"
 if not os.path.isfile(JAR_PATH):
     print('ERROR: Unable to find required library:', JAR_PATH)
     sys.exit(1)
+
+# Based on https://github.com/microsoft/DeepSpeed/blob/28dfca8a13313b570e1ad145cf14476d8d5d8e16/setup.py
+# Write out version/git info
+git_hash_cmd = "git rev-parse --short HEAD"
+try:
+    result = subprocess.check_output(git_hash_cmd, shell=True)
+    git_hash = result.decode('utf-8').strip()
+    VERSION += f'+{git_hash}'
+except subprocess.CalledProcessError:
+    pass
 
 setup(name='scienceworld',
     version=VERSION,
