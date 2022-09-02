@@ -346,8 +346,10 @@ class GoalSequence(val subgoals:Array[Goal], optionalUnorderedSubgoals:Array[Goa
       val satisfiedWithObject = goal.satisfiedWithObject
       val satisfiedWithObjectJSON =
         if (satisfiedWithObject.isDefined) {
-          "\"" +  GoalSequence.sanitizeJSON(satisfiedWithObject.get.getDescription(MODE_CURSORY_DETAIL)) + "\""
-        } else {"null"}
+            GoalSequence.sanitizeJSON(satisfiedWithObject.get.getDescription(MODE_CURSORY_DETAIL))
+        } else {
+          ""
+        }
       val defocusOnSuccess = goal.defocusOnSuccess
       val isOptional = goal.isOptional
       val passed =
@@ -363,7 +365,7 @@ class GoalSequence(val subgoals:Array[Goal], optionalUnorderedSubgoals:Array[Goa
       json.append("\"class\":\"" + GoalSequence.sanitizeJSON(goalClass) + "\", ")
       json.append("\"key\":\"" + GoalSequence.sanitizeJSON(key) + "\", ")
       json.append("\"keysMustBeCompletedBefore\":" + keysMustBeCompletedBeforeJSON + ", ")
-      json.append("\"satisfiedWithObject\":" + satisfiedWithObjectJSON + ", ")
+      json.append("\"satisfiedWithObject\":\"" + satisfiedWithObjectJSON + "\", ")
       json.append("\"defocusOnSuccess\":" + defocusOnSuccess + ", ")
       json.append("\"isOptional\":" + isOptional + ", ")
       json.append("\"passed\":" + passed + "")
