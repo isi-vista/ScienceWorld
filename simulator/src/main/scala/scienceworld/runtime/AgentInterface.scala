@@ -53,6 +53,7 @@ class AgentInterface(val universe:EnvObject, val agent:Agent, val task:Task, var
   // Input parser
   val inputParser = new InputParser(actionHandler.getActions())
 
+  var isActionParseValid: Boolean = false
 
   private var curIter:Int = 0
 
@@ -506,6 +507,7 @@ class AgentInterface(val universe:EnvObject, val agent:Agent, val task:Task, var
 
   // Returns (observation, score, isCompleted)
   def step(userInputStr: String): (String, Double, Boolean) = {
+    isActionParseValid = false
     val userOutStr = new StringBuilder()
 
 
@@ -516,6 +518,7 @@ class AgentInterface(val universe:EnvObject, val agent:Agent, val task:Task, var
 
     // Parse user input
     val (success, statusStr) = this.processUserInput(userInputStr, universe)
+    isActionParseValid = success
 
     /*
     // Uncomment to include the user input parse success/failure in the string (e.g. "successfully parsed action (look around)")

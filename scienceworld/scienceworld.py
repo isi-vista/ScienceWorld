@@ -309,6 +309,7 @@ class ScienceWorldEnv:
     # Step
     def step(self, inputStr:str):
         observation = self.server.step(inputStr)
+        success = self.server.getSuccess()
         score = int(round(100 * self.server.getScore()))        # Convert from 0-1 to 0-100
         isCompleted = self.server.getCompleted()
         numMoves = self.getNumMoves()
@@ -331,6 +332,7 @@ class ScienceWorldEnv:
             'moves': numMoves,
             'score': score,
             'reward': reward,
+            'isValidAction': success,
             'look': self.look(),
             'inv': self.inventory(),
             'taskDesc': self.taskdescription(),
