@@ -11,6 +11,7 @@ class ActionHandler {
   val actions = mutable.Map[String, ActionRequestDef]()
 
   val queuedActions = new ArrayBuffer[Action]()
+  val successHistory = new ArrayBuffer[Boolean]()
   val actionHistory = new ArrayBuffer[ Array[Action] ]()
 
   /*
@@ -56,6 +57,7 @@ class ActionHandler {
       println ("Running action: " + action.name)
 
       val (resultDesc, success) = action.runAction()
+      successHistory.append(success)
 
       // Record the action in the agent's action history
       if (action.assignments.contains("agent")) {

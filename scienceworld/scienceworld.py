@@ -311,6 +311,7 @@ class ScienceWorldEnv:
     # Step
     def step(self, inputStr:str):
         observation = self.gateway.step(inputStr)
+        success = self.gateway.getSuccess()
         score = int(round(100 * self.gateway.getScore()))        # Convert from 0-1 to 0-100
         isCompleted = self.gateway.getCompleted()
         numMoves = self.getNumMoves()
@@ -336,6 +337,7 @@ class ScienceWorldEnv:
         infos = {'moves': numMoves,
                  'score': score,
                  'reward': reward,
+                 'isValidAction': success,
                  'look': self.look(),
                  'inv': self.inventory(),
                  'taskDesc': self.taskdescription(),
