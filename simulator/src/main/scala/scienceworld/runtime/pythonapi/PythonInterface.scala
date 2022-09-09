@@ -37,6 +37,7 @@ class PythonInterface() {
 
   var score:Double = 0.0
   var isComplete:Boolean = false
+  var success:Boolean = false
 
   var errorUnknownEnvironment:Boolean = false
   var errorStr:String = ""
@@ -333,8 +334,11 @@ class PythonInterface() {
 
   def getCompleted():Boolean = this.isComplete
 
+  def getSuccess():Boolean = this.success
+
   // Normal
   def step(userInputString:String): String = {
+    this.success = false
     val outStr = new StringBuilder
     // Error checking
     if (this.errorStr != "") return this.errorStr
@@ -365,6 +369,7 @@ class PythonInterface() {
     val (description, score_, isCompleted_) = agentInterface.get.step(userInputString)
     this.score = score_
     this.isComplete = isCompleted_
+    this.success = agentInterface.get.isActionParseValid && agentInterface.get.actionHandler.successHistory.last
 
     // Store in history
     currentHistory.addStep(userInputString, (description, score_, isCompleted_), freelookStr, inventoryStr)
