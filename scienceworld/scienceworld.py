@@ -148,6 +148,10 @@ class ScienceWorldEnv:
     def getPossibleActions(self):
         return list(self.server.getPossibleActions())
 
+    # Get all possible actions (including alternative wordings)
+    def getAllPossibleActions(self):
+        return list(self.server.getAllPossibleActions())
+
     # Get possible actions (and also include the template IDs for those actions)
     def getPossibleActionsWithIDs(self):
         jsonStr = self.server.getPossibleActionsWithIDs()

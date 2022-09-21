@@ -120,6 +120,18 @@ class ActionHandler {
     out.sorted.toArray
   }
 
+  def getAllActionExamplesPlainText(): Array[String] = {
+    val out = new ArrayBuffer[String]
+
+    for (action <- this.getActions()) {
+      for (action_wording <- action.mkHumanReadableExamples()) {
+        out.append(action_wording)
+      }
+    }
+
+    out.sorted.toArray
+  }
+
   def getActionExamplesPlainTextWithID(): Array[ExampleAction] = {
     val out = new ArrayBuffer[ExampleAction]
 
