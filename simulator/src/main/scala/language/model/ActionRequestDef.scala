@@ -17,6 +17,11 @@ case class ActionRequestDef(val name:String, val paramSigList:ParamSigList, val 
     return triggers(0).mkHumanReadableExample()
   }
 
+  def mkHumanReadableExamples():List[String] = {
+    if (triggers.isEmpty) return List.empty[String]
+    triggers.flatMap(_.mkHumanReadableExamples())
+  }
+
   override def toString():String = {
     val os = new StringBuilder
 
@@ -51,6 +56,24 @@ case class ActionTrigger(val pattern:List[ActionExpr]) extends Positional {
     out.mkString(" ")
   }
 
+  def mkHumanReadableExamples(): List[String] = {
+    val components = new ArrayBuffer[List[String]]
+
+    for (elem <- pattern) {
+      components.append(elem.mkHumanReadableExamples())
+    }
+
+    if (components.isEmpty) {return List.empty[String]}
+
+    // Cartesian product, based on https://stackoverflow.com/a/8569263
+    // Alex was not good enough at functional programming to come up with this from scratch
+    val old = components.foldLeft(ArrayBuffer(ArrayBuffer.empty[String])) {
+      (x, y) => for (a <- x; b <- y) yield a :+ b
+    }
+
+    old.map(_.mkString(" ")).toList
+  }
+
   def mkHumanReadableInstance(varLUT:mutable.Map[String, EnvObject], agentContainer:EnvObject):String = {
     val out = new ArrayBuffer[String]
 
@@ -76,6 +99,8 @@ case class ActionTrigger(val pattern:List[ActionExpr]) extends Positional {
 class ActionExpr() extends Positional {
   def mkHumanReadableExample():String = return ""
 
+  def mkHumanReadableExamples():List[String] = List(mkHumanReadableExample())
+
   def mkHumanReadableInstance(varLUT:mutable.Map[String, EnvObject], agentContainer:EnvObject):String = return ""
 }
 
@@ -84,6 +109,8 @@ case class ActionExprOR(val orElements:List[String]) extends ActionExpr {
     if (orElements.length == 0) return ""
     return orElements(0)      // Return first element
   }
+
+  override def mkHumanReadableExamples():List[String] = orElements
 
   override def mkHumanReadableInstance(varLUT:mutable.Map[String, EnvObject], agentContainer:EnvObject):String = this.mkHumanReadableExample()
 

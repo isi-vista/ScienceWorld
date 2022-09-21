@@ -81,6 +81,10 @@ class AgentInterface(val universe:EnvObject, val agent:Agent, val task:Task, var
     actionHandler.getActionExamplesPlainText().sorted
   }
 
+  def getAllPossibleActions(): Array[String] = {
+    actionHandler.getAllActionExamplesPlainText().sorted
+  }
+
   def getPossibleActionsWithIDs(): Array[ExampleAction] = {
     actionHandler.getActionExamplesPlainTextWithID()
   }
