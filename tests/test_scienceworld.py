@@ -3,6 +3,7 @@ from scienceworld import ScienceWorldEnv
 
 def test_observation_is_deterministic():
     env = ScienceWorldEnv("1-1")
+    env.load("1-1", 14)
     obs_orig, _ = env.reset()
 
     for _ in range(30):
@@ -16,6 +17,8 @@ def test_observation_is_deterministic():
 def test_multiple_instances():
     env1 = ScienceWorldEnv("1-1")
     env2 = ScienceWorldEnv("1-1")
+    env1.load("1-1", 14)
+    env2.load("1-1", 14)
 
     assert env1._gateway._gateway_client.port != env2._gateway._gateway_client.port
 
@@ -26,7 +29,7 @@ def test_multiple_instances():
     assert obs1 == obs2
 
     # Interact with one of the envs.
-    env1.step("open door to art studio")
+    env1.step("open door to hallway")
 
     # Check if the observations now differ from each other.
     obs1_1, _, _, _ = env1.step("look around")
@@ -39,7 +42,7 @@ def test_multiple_instances():
     obs1_2, _, _, _ = env1.step("look around")
     assert obs1_1 == obs1_2
 
-    env2.step("open door to art studio")
+    env2.step("open door to hallway")
     obs2_2, _, _, _ = env2.step("look around")
     assert obs1_2 == obs2_2
 
