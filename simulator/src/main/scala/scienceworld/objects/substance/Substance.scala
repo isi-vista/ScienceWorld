@@ -11,6 +11,8 @@ class Substance extends EnvObject {
   }
 
   override def getDescription(mode:Int): String = {
+    //val overrideName = this.propMaterial.get.nameInStateOfMatter(this.propMaterial.get.stateOfMatter)
+    //return "a substance called " + this.getDescriptName(overrideName)
     return "a substance called " + this.getDescriptName()
   }
 }

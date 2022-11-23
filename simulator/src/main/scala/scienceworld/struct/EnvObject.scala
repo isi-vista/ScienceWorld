@@ -532,7 +532,7 @@ class EnvObject(var name:String, var objType:String, includeElectricalTerminals:
     }
 
     // State of matter: Change state of matter based on temperature
-    StateOfMatter.ChangeOfState(this)
+    StateOfMatter.ChangeOfState(this, forceNameUpdate = true)
 
     // Electrical conductivity: Potentially conduct electricity, if an electrical conductor and connected to other conductors
     ElectricalConductivity.unpolarizedElectricalConductivityTick(this, activateDeviceIfPowered = false)
