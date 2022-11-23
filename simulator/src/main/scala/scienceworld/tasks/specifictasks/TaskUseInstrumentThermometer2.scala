@@ -452,6 +452,7 @@ class TaskUseInstrumentThermometer2(val mode:String = MODE_MEASURE_MELTING_KNOWN
           // Break when the object is no longer a liquid
           if (objSOM != "solid") break()
         }
+        return (false, getActionHistory(runner))
       }
 
 
@@ -485,6 +486,7 @@ class TaskUseInstrumentThermometer2(val mode:String = MODE_MEASURE_MELTING_KNOWN
           // Break when the object is no longer a liquid
           if (objSOM != "liquid") break()
         }
+        return (false, getActionHistory(runner))
       }
 
     }
