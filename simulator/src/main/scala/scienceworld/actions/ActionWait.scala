@@ -72,7 +72,7 @@ class ActionWait1(action:ActionRequestDef, assignments:Map[String, EnvObject]) e
 
   override def runAction(): (String, Boolean) = {
     val agent = assignments("agent")
-    val waitTime:Int = 1     // Number of iterations to wait for
+    val waitTime:Int = 100     // Number of iterations to wait for
 
     // Do checks for valid action
     val (invalidStr, isValid) = ActionWait1.isValidAction(assignments)

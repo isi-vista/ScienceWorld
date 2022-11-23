@@ -129,6 +129,14 @@ def app():
 
     historyRecording = []
 
+    start_steps=[
+        "open door to kitchen","go to kitchen","pick up thermometer",
+        "pick up ceramic cup containing mercury","go to hallway",
+        "open door to workshop","go to workshop",
+        "open freezer","move ceramic cup containing mercury to freezer"
+    ]
+    for step in start_steps:
+        env.step(step)
     userInputStr = "look around"        # First action
     consoleMoveCount = 0
     while (userInputStr not in exitCommands):
