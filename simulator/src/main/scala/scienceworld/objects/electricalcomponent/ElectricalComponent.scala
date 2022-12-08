@@ -113,8 +113,9 @@ class UnpolarizedElectricalComponent extends EnvObject {
 
     os.append("a " + this.getDescriptName())
     if (mode == MODE_DETAILED) {
+      os.append(". ")
       os.append("its terminal 1 is connected to: " + this.terminal1.get.propElectricalConnection.get.getConnectedToStr() + ". ")
-      os.append("its terminal 2 is connected to: " + this.terminal2.get.propElectricalConnection.get.getConnectedToStr() + ". ")
+      os.append("its terminal 2 is connected to: " + this.terminal2.get.propElectricalConnection.get.getConnectedToStr() + ".")
     }
 
     //if (this.propDevice.get.isActivated) { os.append("on") } else { os.append("off") }
